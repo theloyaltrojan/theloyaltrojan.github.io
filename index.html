@@ -3,38 +3,263 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>theloyaltrojan</title>
+<title>Hardwood Legends — a basketball game in one HTML file</title>
+<meta name="description" content="An arcade-sim basketball game that runs entirely from a single 432 KB HTML file. No build step, no asset files: every court line, jersey, crowd member and sound is generated in code when the page loads.">
 <meta name="google-adsense-account" content="ca-pub-7516114040452296">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Hardwood Legends — a basketball game in one HTML file">
+<meta property="og:description" content="Full-court 5v5 with a shot clock, fouls and free throws. A career, a walkable park, peer-to-peer multiplayer. All of it from one file, with nothing loaded from disk.">
+<meta property="og:url" content="https://theloyaltrojan.github.io/">
+<meta property="og:image" content="https://theloyaltrojan.github.io/img/play.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Ccircle cx=%2716%27 cy=%2716%27 r=%2714%27 fill=%27%23f2c318%27/%3E%3C/svg%3E">
 <style>
-  :root { --bg: #0b0d12; --ink: #f3f0e7; --muted: #8b909a; --accent: #f2c318; --line: rgba(255,255,255,0.09); }
+  :root {
+    --bg: #0b0d12; --panel: #11141b; --panel2: #191d26; --line: rgba(255,255,255,0.09);
+    --ink: #f3f0e7; --muted: #8b909a; --accent: #f2c318; --accent-ink: #15130a;
+    --display: "Haettenschweiler", "Impact", "Arial Narrow", "Franklin Gothic Medium", "Helvetica Neue", Arial, sans-serif;
+    --sans: "Helvetica Neue", Helvetica, Arial, "Segoe UI", sans-serif;
+    --mono: "SF Mono", Menlo, Consolas, monospace;
+  }
   * { box-sizing: border-box; }
-  body { margin: 0; min-height: 100dvh; display: grid; place-items: center; padding: 32px 20px;
-         background: var(--bg); color: var(--ink);
-         font: 16px/1.7 "Helvetica Neue", Helvetica, Arial, "Segoe UI", sans-serif; }
-  main { width: 100%; max-width: 520px; }
-  h1 { margin: 0 0 4px; font-size: 13px; letter-spacing: 0.34em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
-  .handle { margin: 0 0 28px; font-size: clamp(38px, 9vw, 60px); line-height: 1; letter-spacing: -0.03em;
-            font-family: "Haettenschweiler", "Impact", "Arial Narrow", "Franklin Gothic Medium", sans-serif; }
-  .handle span { color: var(--accent); }
-  a.card { display: block; padding: 16px 18px; border: 1px solid var(--line); border-radius: 4px;
-           color: inherit; text-decoration: none; transition: border-color .15s, background .15s; }
-  a.card:hover { border-color: var(--accent); background: rgba(242,195,24,0.05); }
-  a.card b { display: block; font-size: 18px; letter-spacing: -0.01em; }
-  a.card span { color: var(--muted); font-size: 14px; }
-  footer { margin-top: 28px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 13px; color: var(--muted); }
-  footer a { color: inherit; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.72 var(--sans);
+         -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 20px; }
+  a { color: var(--accent); }
+
+  /* ---------- masthead ---------- */
+  header { border-bottom: 1px solid var(--line);
+           background: repeating-linear-gradient(-45deg, transparent 0 22px, rgba(255,255,255,0.018) 22px 23px); }
+  .bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 0; }
+  .mark { font-family: var(--display); font-size: 26px; letter-spacing: 0.01em; text-transform: uppercase; }
+  .mark span { background: var(--accent); color: var(--accent-ink); padding: 0 7px; }
+  nav { display: flex; gap: 20px; font-size: 14px; }
+  nav a { color: var(--muted); text-decoration: none; }
+  nav a:hover { color: var(--ink); }
+
+  /* ---------- hero ---------- */
+  .hero { padding: 54px 0 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 44px; align-items: center; }
+  h1 { margin: 0 0 14px; font-family: var(--display); font-size: clamp(46px, 6.4vw, 78px); line-height: 0.94;
+       letter-spacing: -0.005em; text-transform: uppercase; }
+  h1 em { font-style: normal; color: var(--accent); }
+  .lede { margin: 0 0 8px; font-size: 18px; color: #d7d4cc; }
+  .sub { margin: 0 0 26px; color: var(--muted); font-size: 15px; }
+  .cta { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .btn { display: inline-block; padding: 13px 26px; font-family: var(--display); font-size: 21px;
+         letter-spacing: 0.04em; text-transform: uppercase; text-decoration: none;
+         background: var(--accent); color: var(--accent-ink); border: 1px solid var(--accent);
+         transform: skewX(-9deg); transition: filter .15s; }
+  .btn > span { display: inline-block; transform: skewX(9deg); }
+  .btn:hover { filter: brightness(1.12); }
+  .btn.ghost { background: none; color: var(--ink); border-color: var(--line); }
+  .btn.ghost:hover { border-color: var(--accent); filter: none; }
+  .shot { width: 100%; display: block; border: 1px solid var(--line); border-radius: 3px; }
+  figure { margin: 0; }
+  figcaption { margin-top: 8px; color: var(--muted); font-size: 13px; }
+
+  /* ---------- sections ---------- */
+  section { padding: 44px 0; border-top: 1px solid var(--line); }
+  h2 { margin: 0 0 6px; font-family: var(--display); font-size: 32px; text-transform: uppercase; letter-spacing: 0.01em; }
+  .kicker { margin: 0 0 26px; color: var(--muted); font-size: 14px; letter-spacing: 0.16em; text-transform: uppercase; }
+  p { color: #d7d4cc; }
+  .cols { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+
+  .mode { padding: 18px 20px; background: var(--panel); border: 1px solid var(--line); border-left: 3px solid var(--accent); }
+  .mode h3 { margin: 0 0 6px; font-family: var(--display); font-size: 22px; text-transform: uppercase; letter-spacing: 0.02em; }
+  .mode p { margin: 0; font-size: 15px; color: var(--muted); }
+
+  .build { display: grid; grid-template-columns: 1.15fr 1fr; gap: 40px; align-items: start; }
+  .build p { margin: 0 0 14px; }
+  .facts { border: 1px solid var(--line); background: var(--panel); }
+  .facts div { display: flex; justify-content: space-between; gap: 14px; padding: 11px 16px; border-bottom: 1px solid var(--line); font-size: 14px; }
+  .facts div:last-child { border-bottom: 0; }
+  .facts b { color: var(--muted); font-weight: 400; }
+  .facts span { font-family: var(--mono); font-size: 13px; text-align: right; }
+
+  table { width: 100%; border-collapse: collapse; }
+  td { padding: 9px 0; border-bottom: 1px solid var(--line); font-size: 15px; color: #d7d4cc; }
+  td:last-child { text-align: right; color: var(--muted); }
+  kbd { display: inline-block; min-width: 26px; padding: 2px 7px; margin-left: 4px; background: var(--panel2);
+        border: 1px solid var(--line); border-radius: 3px; font: 12px var(--mono); color: var(--ink); }
+
+  .gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+  footer { padding: 30px 0 46px; border-top: 1px solid var(--line); color: var(--muted); font-size: 14px;
+           display: flex; flex-wrap: wrap; gap: 8px 22px; justify-content: space-between; }
+  footer a { color: var(--muted); }
   footer a:hover { color: var(--ink); }
+
+  @media (max-width: 820px) {
+    .hero { grid-template-columns: 1fr; gap: 28px; padding: 36px 0 30px; }
+    .cols, .build, .gallery { grid-template-columns: 1fr; gap: 16px; }
+    nav { display: none; }
+  }
 </style>
 </head>
 <body>
-<main>
-  <h1>GitHub</h1>
-  <p class="handle">the<span>loyal</span>trojan</p>
-  <a class="card" href="/hardwood/">
-    <b>Hardwood Legends</b>
-    <span>An arcade-sim basketball game that runs from one HTML file.</span>
-  </a>
-  <footer><a href="https://github.com/theloyaltrojan">github.com/theloyaltrojan</a></footer>
+
+<header>
+  <div class="wrap bar">
+    <div class="mark">Hardwood <span>Legends</span></div>
+    <nav>
+      <a href="#modes">Modes</a>
+      <a href="#built">How it's built</a>
+      <a href="#controls">Controls</a>
+      <a href="#about">About</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <div class="hero">
+    <div>
+      <h1>A basketball game in <em>one file</em></h1>
+      <p class="lede">Full-court 5v5 with quarters, a 24-second clock, inbounds, fouls and free throws.
+         A career you play through a season and a playoff bracket. A park you walk around as your own player.</p>
+      <p class="sub">Runs in the browser. Nothing to install, nothing to sign up for.</p>
+      <div class="cta">
+        <a class="btn" href="/hardwood/"><span>Play it</span></a>
+        <a class="btn ghost" href="https://github.com/theloyaltrojan/hardwood"><span>Source</span></a>
+      </div>
+    </div>
+    <figure>
+      <img class="shot" src="img/play.jpg" width="1280" height="720" alt="A 5v5 possession in Hardwood Legends: a made jumper, the crowd in the stands behind, player name tags over the court.">
+      <figcaption>5v5, second quarter. The scorebug, crowd, ribbon boards and every jersey are drawn from code.</figcaption>
+    </figure>
+  </div>
+
+  <section id="modes">
+    <h2>What you can play</h2>
+    <p class="kicker">Six ways in</p>
+    <div class="cols">
+      <div class="mode">
+        <h3>Full court 5v5</h3>
+        <p>Four quarters, a 24-second clock, inbounds, fouls and free throws. Twenty-four clubs across two
+           conferences, each with its own colours and a change strip so two teams never share a court in
+           similar kit.</p>
+      </div>
+      <div class="mode">
+        <h3>MyCareer</h3>
+        <p>Build a player — name, position, height, number, look, archetype — then pick a club and play a
+           twelve-game season, a top-eight conference bracket and a Finals. Games grade your box score and
+           pay XP against your archetype's ceilings. Seasons roll over and the history stacks up.</p>
+      </div>
+      <div class="mode">
+        <h3>MyPark</h3>
+        <p>A walkable outdoor lobby you enter as your career player. Six half courts around a plaza, team
+           pads behind each midcourt line, live chat. Fill every pad and the game tips off where it stands,
+           with everyone else free to watch from the sideline.</p>
+      </div>
+      <div class="mode">
+        <h3>Streetball</h3>
+        <p>1v1 to 21 on a half court, loser's ball. 3v3 with a 14-second clock and a clear past the arc
+           after every stop.</p>
+      </div>
+      <div class="mode">
+        <h3>Multiplayer</h3>
+        <p>Peer-to-peer over WebRTC with a join code. No server holds the game — one player hosts it and the
+           others predict locally against host-authoritative snapshots.</p>
+      </div>
+      <div class="mode">
+        <h3>Workout and gym</h3>
+        <p>A seven-step tutorial in an empty gym covering movement, the shot meter, greening a release and
+           dribble moves. Nothing in it can be failed. Or just take the empty court and shoot.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="built">
+    <h2>How it's built</h2>
+    <p class="kicker">One file, no assets</p>
+    <div class="build">
+      <div>
+        <p>The whole game is a single HTML document — markup, styles and JavaScript in one file, opened
+           directly or served as a static page. There is no build step, no bundler and no asset pipeline,
+           because there are no assets. Every court line, jersey number, crowd member, backboard and sound
+           effect is generated in code while the page loads.</p>
+        <p>Physics run on a fixed 120 Hz timestep decoupled from rendering, with the drawn frame interpolated
+           between simulation ticks, so the game behaves identically whether your screen runs at 60 Hz or 144.
+           Gameplay randomness goes through a seeded generator, which is what makes a match reproducible and
+           the test suite possible.</p>
+        <p>Three.js, pinned to one version and fetched from a CDN, is the only dependency the game needs to
+           run. A regression suite drives the simulation headlessly — checking that shooting percentages stay
+           in a believable band, that nobody heaves from the far end of the floor, that a career survives a
+           reload, and that the frame budget holds — and runs on every push.</p>
+      </div>
+      <div class="facts">
+        <div><b>Source</b><span>1 file · 432 KB</span></div>
+        <div><b>Build step</b><span>none</span></div>
+        <div><b>Asset files</b><span>0</span></div>
+        <div><b>Dependencies</b><span>Three.js r128</span></div>
+        <div><b>Simulation</b><span>120 Hz fixed</span></div>
+        <div><b>Render target</b><span>60 FPS</span></div>
+        <div><b>Multiplayer</b><span>WebRTC, host-authoritative</span></div>
+        <div><b>Tests</b><span>17, in CI</span></div>
+        <div><b>Licence</b><span>MIT</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>A look around</h2>
+    <p class="kicker">Menu and park</p>
+    <div class="gallery">
+      <figure>
+        <img class="shot" src="img/menu.jpg" width="1280" height="720" alt="The Hardwood Legends main menu, listing game modes and a team picker.">
+        <figcaption>Picking a matchup from the main menu.</figcaption>
+      </figure>
+      <figure>
+        <img class="shot" src="img/park.jpg" width="1280" height="720" alt="MyPark at night: a floodlit outdoor half court with team pads marked on the ground.">
+        <figcaption>MyPark. Stand on a pad, fill the court, run it.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section id="controls">
+    <h2>Controls</h2>
+    <p class="kicker">Keyboard, remappable in settings</p>
+    <div class="cols">
+      <table>
+        <tr><td>Move</td><td><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></td></tr>
+        <tr><td>Sprint</td><td><kbd>Shift</kbd></td></tr>
+        <tr><td>Shoot or dunk — hold, then release</td><td><kbd>Space</kbd></td></tr>
+        <tr><td>Pass</td><td><kbd>E</kbd></td></tr>
+        <tr><td>Pump fake</td><td><kbd>R</kbd></td></tr>
+      </table>
+      <table>
+        <tr><td>Dribble moves</td><td><kbd>←</kbd><kbd>↑</kbd><kbd>→</kbd><kbd>↓</kbd></td></tr>
+        <tr><td>Jump or contest, on defence</td><td><kbd>Space</kbd></td></tr>
+        <tr><td>Steal</td><td><kbd>E</kbd></td></tr>
+        <tr><td>Switch defender</td><td><kbd>Tab</kbd></td></tr>
+        <tr><td>Pause</td><td><kbd>Esc</kbd></td></tr>
+      </table>
+    </div>
+    <p style="margin-top:18px;color:var(--muted);font-size:15px">Hold shoot to start the meter and let go in
+       the green. Sprint at the rim and shoot to dunk. Flick a dribble move toward the basket to spin past,
+       away from it to fade back, or across to cross over — time one while the defender is mirroring you and
+       they hit the floor. A keyboard is required; there is no touch control yet.</p>
+  </section>
+
+  <section id="about">
+    <h2>About</h2>
+    <p class="kicker">Who makes this</p>
+    <p>Hardwood Legends is a personal project by <a href="https://github.com/theloyaltrojan">theloyaltrojan</a>,
+       written to see how much of a sports game fits inside a single HTML file with nothing loaded from disk.
+       It is free to play, open source under the MIT licence, and has no accounts, no logins and no paid
+       anything — the coins in it are earned by playing and only buy cosmetics.</p>
+    <p>The code is on <a href="https://github.com/theloyaltrojan/hardwood">GitHub</a>, along with a changelog
+       covering what changed and why. Bugs, ideas and pull requests are welcome as issues on that repository,
+       which is also the best way to get in touch.</p>
+  </section>
+
 </main>
+
+<footer class="wrap">
+  <span>Hardwood Legends — MIT licensed. Built by theloyaltrojan.</span>
+  <span><a href="/hardwood/">Play</a> · <a href="https://github.com/theloyaltrojan/hardwood">GitHub</a> · <a href="/hardwood/privacy.html">Privacy</a></span>
+</footer>
+
 </body>
 </html>
