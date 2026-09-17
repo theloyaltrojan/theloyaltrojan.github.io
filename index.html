@@ -39,9 +39,9 @@
   nav a:hover { color: var(--ink); }
 
   /* ---------- hero ---------- */
-  .hero { padding: 54px 0 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 44px; align-items: center; }
-  h1 { margin: 0 0 14px; font-family: var(--display); font-size: clamp(46px, 6.4vw, 78px); line-height: 0.94;
-       letter-spacing: -0.005em; text-transform: uppercase; }
+  .hero { padding: 54px 0 40px; display: grid; grid-template-columns: 1fr 1.18fr; gap: 40px; align-items: center; }
+  h1 { margin: 0 0 14px; font-family: var(--display); font-size: clamp(44px, 5.4vw, 70px); line-height: 0.95;
+       letter-spacing: -0.005em; text-transform: uppercase; text-wrap: balance; }
   h1 em { font-style: normal; color: var(--accent); }
   .lede { margin: 0 0 8px; font-size: 18px; color: #d7d4cc; }
   .sub { margin: 0 0 26px; color: var(--muted); font-size: 15px; }
@@ -54,7 +54,10 @@
   .btn:hover { filter: brightness(1.12); }
   .btn.ghost { background: none; color: var(--ink); border-color: var(--line); }
   .btn.ghost:hover { border-color: var(--accent); filter: none; }
-  .shot { width: 100%; display: block; border: 1px solid var(--line); border-radius: 3px; }
+  /* height:auto is load-bearing: without it the width/height attributes act as presentational
+     hints and the image is stretched to a literal 720px tall. */
+  .shot { width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; display: block;
+          border: 1px solid var(--line); border-radius: 3px; }
   figure { margin: 0; }
   figcaption { margin-top: 8px; color: var(--muted); font-size: 13px; }
 
