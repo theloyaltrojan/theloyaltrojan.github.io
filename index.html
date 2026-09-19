@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Hardwood Legends — a basketball game in one HTML file</title>
-<meta name="description" content="An arcade-sim basketball game that runs entirely from a single 432 KB HTML file. No build step, no asset files: every court line, jersey, crowd member and sound is generated in code when the page loads.">
+<meta name="description" content="An arcade-sim basketball game that runs entirely from a single HTML file of about 520 KB. No build step, no asset files: every court line, jersey, crowd member and sound is generated in code when the page loads.">
 <meta name="google-adsense-account" content="ca-pub-7516114040452296">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Hardwood Legends — a basketball game in one HTML file">
@@ -110,6 +110,7 @@
       <a href="#built">How it's built</a>
       <a href="#controls">Controls</a>
       <a href="#about">About</a>
+      <a href="/hardwood/guide.html">Guide</a>
     </nav>
   </div>
 </header>
@@ -139,7 +140,7 @@
     <div class="cols">
       <div class="mode">
         <h3>Full court 5v5</h3>
-        <p>Four quarters, a 24-second clock, inbounds, fouls and free throws. Twenty-four clubs across two
+        <p>Four quarters, a 24-second clock, inbounds, fouls and free throws. Thirty clubs across two
            conferences, each with its own colours and a change strip so two teams never share a court in
            similar kit.</p>
       </div>
@@ -166,9 +167,10 @@
            others predict locally against host-authoritative snapshots.</p>
       </div>
       <div class="mode">
-        <h3>Workout and gym</h3>
-        <p>A seven-step tutorial in an empty gym covering movement, the shot meter, greening a release and
-           dribble moves. Nothing in it can be failed. Or just take the empty court and shoot.</p>
+        <h3>A first game that teaches</h3>
+        <p>There is no tutorial to sit through. Your first career game is a real game against the CPU, and
+           it slows down to teach each control at the moment you need it. The empty gym is still there when
+           you just want to shoot. The <a href="/hardwood/guide.html">full guide</a> covers everything else.</p>
       </div>
     </div>
   </section>
@@ -192,14 +194,14 @@
            reload, and that the frame budget holds — and runs on every push.</p>
       </div>
       <div class="facts">
-        <div><b>Source</b><span>1 file · 432 KB</span></div>
+        <div><b>Source</b><span>1 file · about 520 KB</span></div>
         <div><b>Build step</b><span>none</span></div>
         <div><b>Asset files</b><span>0</span></div>
         <div><b>Dependencies</b><span>Three.js r128</span></div>
         <div><b>Simulation</b><span>120 Hz fixed</span></div>
         <div><b>Render target</b><span>60 FPS</span></div>
         <div><b>Multiplayer</b><span>WebRTC, host-authoritative</span></div>
-        <div><b>Tests</b><span>17, in CI</span></div>
+        <div><b>Tests</b><span>25, in CI</span></div>
         <div><b>Licence</b><span>MIT</span></div>
       </div>
     </div>
@@ -261,7 +263,7 @@
 
 <footer class="wrap">
   <span>Hardwood Legends — MIT licensed. Built by theloyaltrojan.</span>
-  <span><a href="/hardwood/">Play</a> · <a href="https://github.com/theloyaltrojan/hardwood">GitHub</a> · <a href="/hardwood/privacy.html">Privacy</a></span>
+  <span><a href="/hardwood/">Play</a> · <a href="/hardwood/guide.html">Guide</a> · <a href="https://github.com/theloyaltrojan/hardwood">GitHub</a> · <a href="/hardwood/privacy.html">Privacy</a></span>
 </footer>
 
 </body>
